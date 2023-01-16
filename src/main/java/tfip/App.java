@@ -6,21 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Hello world!
- */
 public class App {
-    private App() {
-    }
-
-
 
     public static void main(String[] args) {
 
         String dirPath = "\\data2";
         String filename = "";
 
+
+        // Instantiate a file/directopry object.
         File newDirectory = new File(dirPath);
+
+        // if directroy exists, print to console "directory exist" message
+        // else create the directory
         if(newDirectory.exists()) {
             System.out.println("Directory already exists.");
         } else {
@@ -29,6 +27,8 @@ public class App {
 
         System.out.println("Welcome to my shopping cart.");
 
+        // to store user's cart items.
+        String strValue = "";
         List<String> cartItems = new ArrayList<String> ();
 
         Console con = System.console();
@@ -47,14 +47,7 @@ public class App {
                     break;
 
                 case "list":
-                    if ( cartItems.size() >0) {
-                        for (String item: cartItems) {
-                            System.out.printf(item);
-                            System.out.println();
-                        }
-                    } else {
-                        displayMessage("Your cart is empty.");
-                    }
+                    listCart(cartItems);
                     break;
 
                 case "users":
@@ -62,32 +55,69 @@ public class App {
 
                 default:
 
-
-
             }// end of switch
 
         if (input.startsWith("add")) {
             input.replace(",", " ");
 
-            String strValue = "";
             Scanner scanner = new Scanner(input.substring(4)); // with substring, the scan will start from index 4.
 
             while(scanner.hasNext()) {
                 strValue = scanner.next(); // https://www.javatpoint.com/post/java-scanner-next-method
                 cartItems.add(strValue);
-
             }
+            }// end of if for add.
+        
+        if (input.startsWith("delete")) {
+            
+            deleteItem( cartItems, input);
 
-        }// end of if for add.
+        } // end of if for delete
 
         } // end of while loop
 
 
+    }// End of main.
 
+    public static List<String> deleteItem(List<String> cartItems, String input) {
 
+        input.replace(","," ");
+        Scanner scanner = new Scanner(input.substring(6)); // with substring, the scan will start from index 6.
+
+        String strValue = "";
+
+        while(scanner.hasNext()) {
+            strValue = scanner.next(); 
+            int listItemIndex = Integer.parseInt(strValue);
+
+            if (listItemIndex < cartItems.size()) {
+                cartItems.remove(listItemIndex);
+            } else {displayMessage("Incorrect item index.");}
+        }
+        return cartItems;
     }
+
+
+    public static void listCart (List<String> cartItems) {
+            if ( cartItems.size() >0) {
+                for(int i=0; i<cartItems.size(); i++) {
+                    System.out.printf("%d. %s\n", i, cartItems.get(i));
+                }
+                
+                // for (String item: cartItems) {
+                //     System.out.printf(item);
+                //     System.out.println();
+                // }
+            } else {
+                displayMessage("Your cart is empty.");
+            }
+        }
 
         public static void displayMessage(String message) {
         System.out.println(message);
     }
+
+
+
+
 }
